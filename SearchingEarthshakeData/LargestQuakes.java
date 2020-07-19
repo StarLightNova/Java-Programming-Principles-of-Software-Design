@@ -3,7 +3,7 @@
  * Write a description of LargestQuakes here.
  * 
  * @author (Toleubay Alikhan (StarLightNova)
- * @version 07/19/2020
+ * @version 1.0, 07/19/2020
  */
 import java.util.*;
 public class LargestQuakes {
