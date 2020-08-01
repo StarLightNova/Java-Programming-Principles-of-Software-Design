@@ -27,32 +27,43 @@ public class EfficientMarkovModel extends AbstractMarkovModel {
     public void setTraining(String s){
         myText = s.trim();
         buildMap();
+        printHashMapInfo();
+    }
+    
+    @Override
+    public ArrayList<String> getFollows(String key) {
+        return map.get(key);
     }
     
     public void buildMap(){
-        for (int i=0; i<myText.length()-n;i++){
-            String newKey = myText.substring(i, i+n);
-             if(!map.containsKey(newKey)){
-                 ArrayList<String> list = getFollows(newKey);
-                 map.put(newKey,list);
-             }
+        for (int i = 0; i < myText.length() - n; i++) {
+
+            String key = myText.substring(i, i + n);
+            String follow = myText.substring(i+n, i+n+1);;
+
+            if (map.containsKey(key)) {
+                map.get(key).add(follow);
+            }
+            else {
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(follow);
+                map.put(key, list);
+            }
         }
     }
     
-    public void printHashMapInfo(){
-       buildMap();
-       System.out.println("Keys in the hashmap: "+(map.size()+1));
-       int index =0;
-       String maxkey = "";
-       for (String s : map.keySet()){
-           if(map.get(s).size()> index){
-            index = map.get(s).size();
-            maxkey = s;
-           }
-        System.out.println(s + "  " + map.get(s));
-        }
-       System.out.println("max num of keys = " +index);
-       System.out.println("the key is this: " + maxkey);
+    public void printHashMapInfo() {
+        int maxv = Integer.MIN_VALUE;
+        String maxKey = "";
+        for (String key : map.keySet()) {
+            System.out.printf("Key:\t[%s]\tvalues: ", key);
+            System.out.println(map.get(key));
+            maxv = Math.max(maxv, map.get(key).size()); 
+	}
+	System.out.println("Max number: " + map.size());
+	System.out.println("Max array num:  " + maxv);
+	//System.out.println("Max key: " + maxKey);
+
     }
     
     public String getRandomText(int numChars){
@@ -60,6 +71,7 @@ public class EfficientMarkovModel extends AbstractMarkovModel {
         if (myText == null){
             return "";
         }
+        buildMap();
         StringBuilder sb = new StringBuilder();
         int index = myRandom.nextInt(myText.length()-n);
         String key = myText.substring(index, index+n);
@@ -78,5 +90,9 @@ public class EfficientMarkovModel extends AbstractMarkovModel {
         
         return sb.toString();
     }    
+    
+    public String toString(){
+        return "EfficientMarkovModel " + this.n;
+    }
     
 }
